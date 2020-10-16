@@ -73,32 +73,29 @@ class Game
         puts ""
     end
 
-    def move(from, to)
-        def change_to_idx(ltr)
-            case ltr
-            when 'a'
-                0
-            when 'b'
-                1
-            when 'c'
-                2
-            when 'd'
-                3
-            when 'e'
-                4
-            when 'f'
-                5
-            when 'g'
-                6
-            when 'h'
-                7
-            end
+    def change_to_idx(pos)
+        ltr_to_idx = -1
+
+        case pos[0]
+        when 'a'
+            ltr_to_idx = 0
+        when 'b'
+            ltr_to_idx = 1
+        when 'c'
+            ltr_to_idx = 2
+        when 'd'
+            ltr_to_idx = 3
+        when 'e'
+            ltr_to_idx = 4
+        when 'f'
+            ltr_to_idx = 5
+        when 'g'
+            ltr_to_idx = 6
+        when 'h'
+            ltr_to_idx = 7
         end
 
-        initial = [ (from[1].to_i - 1), change_to_idx(from[0]) ]
-        destination = [ (to[1].to_i - 1), change_to_idx(to[0])]
-
-        pp [initial, destination]
+        [(pos[1].to_i - 1), ltr_to_idx]
     end
 
     def play
@@ -109,8 +106,6 @@ class Game
         puts "Pick a move"
 
         picked_move = gets.chomp.split
-
-        move(picked_move[0], picked_move[1])
     end
 end
 
