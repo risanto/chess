@@ -1,4 +1,8 @@
+require_relative "pieces/knight.rb"
+
 class Game
+    attr_accessor :board
+
     def initialize
         @board = [
           ['black-rook-1', 'black-knight-1', 'black-bishop-1', 'black-king', 'black-queen', 'black-bishop-2', 'black-knight-2', 'black-rook-2'],
@@ -68,7 +72,47 @@ class Game
         puts '   a b c d e f g h'
         puts ""
     end
+
+    def move(from, to)
+        def change_to_idx(ltr)
+            case ltr
+            when 'a'
+                0
+            when 'b'
+                1
+            when 'c'
+                2
+            when 'd'
+                3
+            when 'e'
+                4
+            when 'f'
+                5
+            when 'g'
+                6
+            when 'h'
+                7
+            end
+        end
+
+        initial = [ (from[1].to_i - 1), change_to_idx(from[0]) ]
+        destination = [ (to[1].to_i - 1), change_to_idx(to[0])]
+
+        pp [initial, destination]
+    end
+
+    def play
+        system("clear") || system("cls")
+
+        display
+
+        puts "Pick a move"
+
+        picked_move = gets.chomp.split
+
+        move(picked_move[0], picked_move[1])
+    end
 end
 
 game = Game.new
-game.display
+game.play
