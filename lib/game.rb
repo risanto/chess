@@ -98,16 +98,35 @@ class Game
         [(pos[1].to_i - 1), ltr_to_idx]
     end
 
+    def find_piece(piece_name)
+        for row in 0..@board.length do
+            for col in 0..@board[row].length do
+                return [row, col] if @board[row][col] == piece_name
+            end
+        end
+
+        return nil
+    end
+
+    def valid_move?(initial, destination)
+        pp change_to_idx(initial)
+        pp change_to_idx(destination)
+    end
+
     def play
         system("clear") || system("cls")
 
         display
 
-        puts "Pick a move"
+        puts "Pick a move by choosing an initial position and its destination (ex: b8 c6)"
 
         picked_move = gets.chomp.split
+
+        valid_move(picked_move[0], picked_move[1])
     end
 end
 
 game = Game.new
-game.play
+# game.play
+
+pp game.find_piece('white-pawn-1')
