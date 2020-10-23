@@ -109,8 +109,22 @@ class Game
     end
 
     def valid_move?(initial, destination)
-        pp change_to_idx(initial)
-        pp change_to_idx(destination)
+        y_init, x_init = change_to_idx(initial)
+        y_dest, x_dest = change_to_idx(destination)
+
+        colour = nil
+
+        if @board[y_init][x_init].include? ('white')
+            colour = 'white'
+        elsif @board[y_init][x_init].include? ('black')
+            colour = 'black'
+        end
+
+        if colour == 'white' && @board[y_init][x_init].include?('white')
+            return false
+        elsif colour == 'black' && @board[y_init][x_init].include?('black')
+            return false
+        end
     end
 
     def play
@@ -128,5 +142,3 @@ end
 
 game = Game.new
 # game.play
-
-pp game.find_piece('white-pawn-1')
