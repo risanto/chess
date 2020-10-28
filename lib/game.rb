@@ -1,4 +1,5 @@
 require_relative "pieces/knight.rb"
+require 'pry'
 
 class Game
     attr_accessor :board
@@ -14,6 +15,7 @@ class Game
           ['white-pawn-1', 'white-pawn-2', 'white-pawn-3', 'white-pawn-4', 'white-pawn-5', 'white-pawn-6', 'white-pawn-7', 'white-pawn-8'],
           ['white-rook-1', 'white-knight-1', 'white-bishop-1', 'white-king', 'white-queen', 'white-bishop-2', 'white-knight-2', 'white-rook-2']
         ]
+        @playing = true
     end
 
     def change_symbol(el)
@@ -108,9 +110,18 @@ class Game
         return nil
     end
 
+    def get_piece_name_by_pos(pos)
+        y, x = pos
+        @board[y][x]
+    end
+
     def valid_move?(initial, destination)
         y_init, x_init = change_to_idx(initial)
         y_dest, x_dest = change_to_idx(destination)
+        binding.pry
+        return false if y_init > 7 || y_init < 0 || x_init > 7 || x_init < 0 || y_dest > 7 || y_dest < 0 || x_dest > 7 || x_dest < 0
+
+        return false if @board[y_init][x_init] == ' '
 
         colour = nil
 
@@ -125,20 +136,36 @@ class Game
         elsif colour == 'black' && @board[y_init][x_init].include?('black')
             return false
         end
+
+        true
     end
 
     def play
-        system("clear") || system("cls")
+        # while @playing do
+            system("clear") || system("cls")
+    
+            display
 
-        display
+            input_complete = false
 
-        puts "Pick a move by choosing an initial position and its destination (ex: b8 c6)"
+            while !input_complete do
+                puts "Pick a move by choosing an initial position and its destination (ex: b8 c6)"
+                
+                picked_move = gets.chomp.split
+                
+                input_complete = true if picked_move[0] && picked_move[1] 
+            end
 
-        picked_move = gets.chomp.split
-
-        valid_move(picked_move[0], picked_move[1])
+            pp valid_move?(picked_move[0], picked_move[1])
+    
+            if valid_move?(picked_move[0], picked_move[1])
+                pos = change_to_idx(picked_move[0])
+                pp "---------"
+                pp get_piece_name_by_pos(pos)
+            end
+        # end
     end
 end
 
 game = Game.new
-# game.play
+game.play
