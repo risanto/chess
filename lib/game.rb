@@ -118,7 +118,7 @@ class Game
     def valid_move?(initial, destination)
         y_init, x_init = change_to_idx(initial)
         y_dest, x_dest = change_to_idx(destination)
-        binding.pry
+        
         return false if y_init > 7 || y_init < 0 || x_init > 7 || x_init < 0 || y_dest > 7 || y_dest < 0 || x_dest > 7 || x_dest < 0
 
         return false if @board[y_init][x_init] == ' '
@@ -130,10 +130,10 @@ class Game
         elsif @board[y_init][x_init].include? ('black')
             colour = 'black'
         end
-
-        if colour == 'white' && @board[y_init][x_init].include?('white')
+        
+        if colour == 'white' && @board[y_dest][x_dest].include?('white')
             return false
-        elsif colour == 'black' && @board[y_init][x_init].include?('black')
+        elsif colour == 'black' && @board[y_dest][x_dest].include?('black')
             return false
         end
 
@@ -153,9 +153,9 @@ class Game
                 
                 picked_move = gets.chomp.split
                 
-                input_complete = true if picked_move[0] && picked_move[1] 
+                input_complete = true if picked_move[0] && picked_move[1]
             end
-
+            
             pp valid_move?(picked_move[0], picked_move[1])
     
             if valid_move?(picked_move[0], picked_move[1])
@@ -168,4 +168,5 @@ class Game
 end
 
 game = Game.new
+
 game.play
