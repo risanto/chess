@@ -18,37 +18,6 @@ class Game
         @playing = true
     end
 
-    def change_symbol(el)
-        if el.include? 'white-king'
-            '♔'
-        elsif el.include? 'white-queen'
-            '♕'
-        elsif el.include? 'white-rook'
-            '♖'
-        elsif el.include? 'white-bishop'
-            '♗'
-        elsif el.include? 'white-knight'
-            '♘'
-        elsif el.include? 'white-pawn'
-            '♙'
-
-        elsif el.include? 'black-king'
-            '♚'
-        elsif el.include? 'black-queen'
-            '♛'
-        elsif el.include? 'black-rook'
-            '♜'
-        elsif el.include? 'black-bishop'
-            '♝'
-        elsif el.include? 'black-knight'
-            '♞'
-        elsif el.include? 'black-pawn'
-            '♟︎'
-        else
-            ' '
-        end
-    end
-
     def display
         puts ""
         
@@ -75,10 +44,43 @@ class Game
         puts ""
     end
 
-    def change_to_idx(pos)
+    # accepts piece_name and returns symbol
+    def change_symbol(piece_name)
+        if piece_name.include? 'white-king'
+            '♔'
+        elsif piece_name.include? 'white-queen'
+            '♕'
+        elsif piece_name.include? 'white-rook'
+            '♖'
+        elsif piece_name.include? 'white-bishop'
+            '♗'
+        elsif piece_name.include? 'white-knight'
+            '♘'
+        elsif piece_name.include? 'white-pawn'
+            '♙'
+
+        elsif piece_name.include? 'black-king'
+            '♚'
+        elsif piece_name.include? 'black-queen'
+            '♛'
+        elsif piece_name.include? 'black-rook'
+            '♜'
+        elsif piece_name.include? 'black-bishop'
+            '♝'
+        elsif piece_name.include? 'black-knight'
+            '♞'
+        elsif piece_name.include? 'black-pawn'
+            '♟︎'
+        else
+            ' '
+        end
+    end
+
+    # accepts ltr & idx and returns array of inner & outer indexes (ex: [6, 0])
+    def change_to_idx(ltr, idx)
         ltr_to_idx = -1
 
-        case pos[0]
+        case ltr
         when 'a'
             ltr_to_idx = 0
         when 'b'
@@ -97,10 +99,12 @@ class Game
             ltr_to_idx = 7
         end
 
-        [(pos[1].to_i - 1), ltr_to_idx]
+        [idx.to_i - 1, ltr_to_idx]
     end
 
+    # accepts piece_name and returns its position -> [row, col]
     def find_piece(piece_name)
+
         for row in 0..@board.length do
             for col in 0..@board[row].length do
                 return [row, col] if @board[row][col] == piece_name
@@ -110,14 +114,17 @@ class Game
         return nil
     end
 
-    def get_piece_name_by_pos(pos)
-        y, x = pos
+    # accepts y & x (outer and inner index) and returns the name of the piece on that position
+    def get_piece_name_by_pos(y, x)
         @board[y][x]
     end
 
+    
+    # accepts initial (ex: [6, 0]) & destination (ex: [4, 0]) and returns true/false based on the validity of the move
     def valid_move?(initial, destination)
-        y_init, x_init = change_to_idx(initial)
-        y_dest, x_dest = change_to_idx(destination)
+
+        y_init, x_init = initial
+        y_dest, x_dest = destination
         
         return false if y_init > 7 || y_init < 0 || x_init > 7 || x_init < 0 || y_dest > 7 || y_dest < 0 || x_dest > 7 || x_dest < 0
 
@@ -140,9 +147,20 @@ class Game
         true
     end
 
+    
+    # accepts initial (ex: [6, 0]) & destination (ex: [4, 0]) and move the initial piece to its destination
+    def move(initial, destination) 
+
+        y_init, x_init = initial
+        y_dest, x_dest = destination
+
+        @board[y_dest][x_dest] = get_piece_name_by_pos(y_init, x_init)
+        @board[y_init][x_init] = " "
+    end
+
     def play
-        # while @playing do
-            system("clear") || system("cls")
+        while @playing do
+            # system("clear") || system("cls")
     
             display
 
@@ -156,14 +174,14 @@ class Game
                 input_complete = true if picked_move[0] && picked_move[1]
             end
             
-            pp valid_move?(picked_move[0], picked_move[1])
+            ltr_init, idx_init = picked_move[0].split('')
+            ltr_dest, idx_dest = picked_move[1].split('')
+
+            initial = change_to_idx(ltr_init, idx_init)
+            destination = change_to_idx(ltr_dest, idx_dest)
     
-            if valid_move?(picked_move[0], picked_move[1])
-                pos = change_to_idx(picked_move[0])
-                pp "---------"
-                pp get_piece_name_by_pos(pos)
-            end
-        # end
+            move(initial, destination) if valid_move?(initial, destination)
+        end
     end
 end
 
